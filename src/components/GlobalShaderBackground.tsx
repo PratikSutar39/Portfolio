@@ -110,10 +110,14 @@ const fragmentShader = /* glsl */ `
     float t  = uTime;
     float s  = uScroll; // 0..1
 
-    // ── Phase helpers ──────────────────────────────────────────
-    float phase0 = 1. - smoothstep(0.0, 0.35, s);   // hero
-    float phase1 = smoothstep(0.1, 0.4, s) * (1.-smoothstep(0.55, 0.75, s)); // mid
-    float phase2 = smoothstep(0.6, 0.85, s);          // lower sections
+    // ── Continuous, heavily overlapping phase envelopes ──────
+    // Wide, gentle smoothsteps so palette and elements crossfade
+    // gradually instead of switching on at fixed thresholds.
+    float warm     = 1.0 - smoothstep(0.0, 0.75, s);        // 1 -> 0 across most of page
+    float cool     = smoothstep(0.0, 0.85, s);              // 0 -> 1
+    float midBias  = 4.0 * s * (1.0 - s);                   // bell curve, peak ~0.5
+    float lateBias = smoothstep(0.35, 1.0, s);              // very gradual late ramp
+    float apertureK = smoothstep(0.55, 0.0, s);             // iris fades by ~0.55
 
     // ── Shared plasma flow ────────────────────────────────────
     float n  = flow(uv*1.4 + vec2(0., t*0.04), t);
@@ -129,89 +133,108 @@ const fragmentShader = /* glsl */ `
     vec3 INK      = vec3(0.02, 0.01, 0.03);
     vec3 DEEP     = vec3(0.01, 0.02, 0.06);
 
-    // ── Phase 0: Hero plasma + aperture (as before) ───────────
-    vec3 col = mix(INK, DEEP, s);
+    // Background tint slowly drifts from warm-ink to deep-violet ink
+    vec3 baseInk = mix(INK, DEEP, smoothstep(0.0, 1.0, s));
+    vec3 col = baseInk;
 
-    // Core plasma — always present, intensity modulated
-    col = mix(col, RED   *0.55, smoothstep(-0.1,0.6,n)  * mix(1.,0.55,s));
-    col = mix(col, CYAN  *0.45, smoothstep( 0.2,0.9,n2) * mix(0.8,1.2,s));
-    col = mix(col, ELECTRIC*0.30, smoothstep(0.5,1.0,n*n2) * mix(0.7,1.4,s));
-    col += EMBER*0.05*(n+0.2) * mix(1.,0.4,s);
+    // ── Continuous core plasma — every color present every-
+    //     where, just at smoothly varying strengths ─────────────
+    float redK      = mix(0.95, 0.30, smoothstep(0.0, 0.70, s));
+    float emberK    = mix(0.90, 0.20, smoothstep(0.0, 0.75, s));
+    float cyanK     = mix(0.55, 1.15, smoothstep(0.0, 0.80, s));
+    float electricK = mix(0.30, 1.20, smoothstep(0.10, 0.95, s));
+    float magentaK  = mix(0.00, 0.85, smoothstep(0.25, 0.95, s));
 
-    // ── Phase 0: Aperture iris ─────────────────────────────────
-    if(phase0 > 0.01){
+    col = mix(col, RED      * 0.55, smoothstep(-0.1, 0.6, n)  * redK);
+    col = mix(col, EMBER    * 0.35, smoothstep( 0.0, 0.7, n3) * emberK * 0.5);
+    col = mix(col, CYAN     * 0.45, smoothstep( 0.2, 0.9, n2) * cyanK);
+    col = mix(col, ELECTRIC * 0.32, smoothstep( 0.5, 1.0, n*n2) * electricK);
+    col = mix(col, MAGENTA  * 0.30, smoothstep( 0.3, 0.95, n*n3 + 0.1) * magentaK);
+    col += EMBER * 0.05 * (n + 0.2) * emberK;
+
+    // ── Aperture iris — smoothly fades out as you scroll ──────
+    {
       float rot = t*0.08;
       vec2 pAp = vec2(cos(rot)*uv.x - sin(rot)*uv.y,
                       sin(rot)*uv.x + cos(rot)*uv.y);
       vec2 ap = aperture(pAp, t);
-      col += ap.x * RED * 1.4  * phase0;
-      col += ap.x * EMBER*0.5  * phase0;
+      col += ap.x * RED * 1.4  * apertureK;
+      col += ap.x * EMBER*0.5  * apertureK;
       float irisR   = length(uv);
       float irisGlow = smoothstep(0.42,0.52,irisR)*(1.-ap.y);
-      col += irisGlow * RED * 0.6 * phase0;
-      col  = mix(col, INK*0.5, ap.y*0.85*phase0);
-      col += exp(-irisR*irisR*14.)*(RED*0.4 + EMBER*0.25)*phase0;
+      col += irisGlow * RED * 0.6 * apertureK;
+      col  = mix(col, INK*0.5, ap.y*0.85*apertureK);
+      col += exp(-irisR*irisR*14.)*(RED*0.4 + EMBER*0.25)*apertureK;
     }
 
-    // ── Phase 0+1: Anamorphic neon streaks ─────────────────────
-    float streakIntensity = mix(1., 1.6, s);
-    col += streak(uv,t,0.45, 0.20,0.018)*CYAN    *1.2*streakIntensity;
-    col += streak(uv,t,0.32,-0.15,0.022)*ELECTRIC*1.0*streakIntensity;
-    col += streak(uv,t,0.58, 0.35,0.012)*RED     *0.8*streakIntensity*(1.-phase2*0.4);
-    col += streak(uv,t,0.27,-0.30,0.020)*EMBER   *0.7*streakIntensity;
-    // Extra streaks that appear deeper in scroll
-    col += streak(uv,t,0.70, 0.08,0.014)*MAGENTA *1.3*phase1;
-    col += streak(uv,t,0.39,-0.42,0.016)*CYAN    *1.1*phase2;
-    col += streak(uv,t,0.52, 0.52,0.010)*ELECTRIC*1.5*phase2;
+    // ── Anamorphic neon streaks — palette drifts with scroll ──
+    // Base 4 streaks always present, color slowly shifts.
+    float streakIntensity = mix(0.9, 1.4, smoothstep(0.0, 1.0, s));
+    col += streak(uv,t,0.45, 0.20,0.018) *
+           mix(CYAN, ELECTRIC, cool*0.6)   * 1.0 * streakIntensity;
+    col += streak(uv,t,0.32,-0.15,0.022) *
+           mix(ELECTRIC, MAGENTA, lateBias*0.5) * 0.9 * streakIntensity;
+    col += streak(uv,t,0.58, 0.35,0.012) *
+           mix(RED, CYAN, cool*0.7)        * 0.75 * streakIntensity;
+    col += streak(uv,t,0.27,-0.30,0.020) *
+           mix(EMBER, ELECTRIC, cool*0.6)  * 0.65 * streakIntensity;
+    // Two extra streaks emerge slowly mid-to-late
+    col += streak(uv,t,0.70, 0.08,0.014) * MAGENTA  * 1.0 * midBias * 0.6;
+    col += streak(uv,t,0.39,-0.42,0.016) * CYAN     * 0.9 * lateBias;
 
-    // ── Phase 1: Dense neural mesh ─────────────────────────────
+    // ── Neural mesh — strength peaks in the middle, never gates on ──
     {
-      float density = mix(4., 8., phase1);
+      float meshK = mix(0.45, 1.0, midBias);
+      float density = mix(4.5, 7.5, midBias);
       vec2 grid = fract(uv*density + vec2(t*0.018,-t*0.013)) - 0.5;
-      float node = exp(-dot(grid,grid)*mix(50.,80.,phase1));
+      float node = exp(-dot(grid,grid)*mix(55.,80.,midBias));
       float nodeMask = smoothstep(0.1,0.8, flow(uv*3.+vec2(t*0.02),t*0.5));
       vec3 nodeCol = mix(CYAN, ELECTRIC, 0.5 + 0.5*sin(t*0.4 + uv.x*2.));
-      col += node * nodeMask * nodeCol * mix(0.5, 1.1, phase1);
+      col += node * nodeMask * nodeCol * meshK;
       float lineX = pulse(fract(uv.x*density + t*0.018), 0.5, 0.025);
       float lineY = pulse(fract(uv.y*density - t*0.013), 0.5, 0.025);
-      col += (lineX+lineY)*nodeMask*CYAN*mix(0.03,0.08,phase1);
+      col += (lineX+lineY)*nodeMask*CYAN * mix(0.025, 0.07, midBias);
     }
 
-    // ── Phase 1→2: Circuit grid ────────────────────────────────
-    if(phase1 > 0.02 || phase2 > 0.02){
-      float cg = circuitGrid(uv, t, mix(3.,5.,phase2));
-      col += cg * mix(CYAN,ELECTRIC,0.4) * 0.06 * max(phase1,phase2);
+    // ── Circuit grid — gradual continuous ramp ────────────────
+    {
+      float cgK = smoothstep(0.15, 0.85, s) * (1.0 - 0.4 * lateBias);
+      float cg = circuitGrid(uv, t, mix(3.0, 4.5, cool));
+      col += cg * mix(CYAN, ELECTRIC, 0.4) * 0.05 * cgK;
     }
 
-    // ── Phase 2: Data streams — diagonal particle trails ───────
-    if(phase2 > 0.02){
-      for(int i=0;i<4;i++){
+    // ── Diagonal particle beams — much subtler, narrower,
+    //     and only 3 beams. Brightness ~1/3 of before. ───────
+    {
+      float beamK = smoothstep(0.45, 0.95, s); // gradual emergence
+      for(int i=0;i<3;i++){
         float fi = float(i);
         vec2 dir = normalize(vec2(
-          cos(fi*1.2 + 0.5),
-          sin(fi*0.9 + 1.1)
+          cos(fi*1.4 + 0.5),
+          sin(fi*1.1 + 1.1)
         ));
-        float proj = dot(uv, dir);
-        float travel = mod(t*(0.3+fi*0.07) + fi*0.8, 3.) - 1.5;
+        float proj   = dot(uv, dir);
+        float travel = mod(t*(0.18 + fi*0.04) + fi*0.9, 3.) - 1.5;
         float dist   = abs(proj - travel);
         float perp   = length(uv - dir*proj);
-        float beam   = exp(-dist*40.) * exp(-perp*perp*6.);
+        float beam   = exp(-dist*55.) * exp(-perp*perp*16.);
         vec3 beamCol = (mod(fi,2.)==0.) ? ELECTRIC : CYAN;
-        col += beam * beamCol * 0.9 * phase2;
+        col += beam * beamCol * 0.32 * beamK;
       }
     }
 
-    // ── Phase 2: Big slow vortex ───────────────────────────────
-    if(phase2 > 0.02){
+    // ── Slow vortex — very gradual, gentle ────────────────────
+    {
+      float vK = smoothstep(0.55, 1.0, s);
       float vAngle = atan(uv.y, uv.x);
       float vR = length(uv);
       float vortex = sin(vAngle*3. - t*0.3 + vR*4.) * 0.5 + 0.5;
       vortex *= exp(-vR*vR*1.2);
-      col += vortex * mix(MAGENTA, ELECTRIC, 0.5) * 0.35 * phase2;
+      col += vortex * mix(MAGENTA, ELECTRIC, 0.5) * 0.22 * vK;
     }
 
     // ── AI scan line ───────────────────────────────────────────
-    col += scanSweep(uv, t, 0.18) * CYAN * 0.5;
+    col += scanSweep(uv, t, 0.18) * CYAN * 0.45;
 
     // ── Post-process ───────────────────────────────────────────
     float vig = smoothstep(1.3, 0.25, length(uv));
