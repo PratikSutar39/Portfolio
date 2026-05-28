@@ -103,6 +103,29 @@ const fragmentShader = /* glsl */ `
     return exp(-abs(p.y - y)*70.);
   }
 
+  // ── Kaleidoscope: fold sample coordinates into N mirrored
+  //    sectors around the origin, with a rotating phase.
+  vec2 kaleidoscope(vec2 p, float segments, float rotation){
+    float cs = cos(rotation);
+    float sn = sin(rotation);
+    vec2 rp = vec2(cs*p.x - sn*p.y, sn*p.x + cs*p.y);
+    float r = length(rp);
+    float a = atan(rp.y, rp.x);
+    float seg = 6.28318530718 / segments;
+    a = mod(a, seg);
+    a = abs(a - seg*0.5);
+    return vec2(cos(a), sin(a)) * r;
+  }
+
+  // Cathedral stained-glass triad: cobalt → ruby → amber
+  vec3 cathedralColor(float v){
+    vec3 COBALT = vec3(0.14, 0.28, 0.95);
+    vec3 RUBY   = vec3(0.85, 0.12, 0.22);
+    vec3 AMBER  = vec3(0.98, 0.72, 0.28);
+    vec3 c1 = mix(COBALT, RUBY,  smoothstep(0.0, 0.55, v));
+    return        mix(c1,     AMBER, smoothstep(0.55, 1.0, v));
+  }
+
   void main(){
     vec2 res = uResolution;
     vec2 uv  = (vUv*res - 0.5*res)/res.y;
@@ -117,7 +140,7 @@ const fragmentShader = /* glsl */ `
     float cool     = smoothstep(0.0, 0.85, s);              // 0 -> 1
     float midBias  = 4.0 * s * (1.0 - s);                   // bell curve, peak ~0.5
     float lateBias = smoothstep(0.35, 1.0, s);              // very gradual late ramp
-    float apertureK = smoothstep(0.55, 0.0, s);             // iris fades by ~0.55
+    float apertureK = smoothstep(0.75, 0.0, s);             // iris fades very gradually across the first 75%
 
     // ── Shared plasma flow ────────────────────────────────────
     float n  = flow(uv*1.4 + vec2(0., t*0.04), t);
@@ -203,23 +226,41 @@ const fragmentShader = /* glsl */ `
       col += cg * mix(CYAN, ELECTRIC, 0.4) * 0.05 * cgK;
     }
 
-    // ── Diagonal particle beams — much subtler, narrower,
-    //     and only 3 beams. Brightness ~1/3 of before. ───────
+    // ── Cathedral kaleidoscope — slow anticlockwise rotation,
+    //     emerges gradually from middle → bottom. Stained-glass
+    //     triad: deep cobalt blue, ruby red, golden amber. ───
     {
-      float beamK = smoothstep(0.45, 0.95, s); // gradual emergence
-      for(int i=0;i<3;i++){
-        float fi = float(i);
-        vec2 dir = normalize(vec2(
-          cos(fi*1.4 + 0.5),
-          sin(fi*1.1 + 1.1)
-        ));
-        float proj   = dot(uv, dir);
-        float travel = mod(t*(0.18 + fi*0.04) + fi*0.9, 3.) - 1.5;
-        float dist   = abs(proj - travel);
-        float perp   = length(uv - dir*proj);
-        float beam   = exp(-dist*55.) * exp(-perp*perp*16.);
-        vec3 beamCol = (mod(fi,2.)==0.) ? ELECTRIC : CYAN;
-        col += beam * beamCol * 0.032 * beamK;
+      float kK = smoothstep(0.40, 0.95, s); // gradual emergence
+      if (kK > 0.0001) {
+        // Negative rotation = anticlockwise rotation of the visible pattern
+        float kRot = -t * 0.055;
+        vec2 kp = uv * 1.35;
+        vec2 ks = kaleidoscope(kp, 8.0, kRot);
+
+        // Layered flowing pattern sampled through the folded coords
+        float kn  = flow(ks * 1.7 + vec2(t*0.04, 0.0), t*0.5);
+        float kn2 = fbm (ks * 3.2 - vec2(t*0.022, t*0.018));
+        float kn3 = snoise(ks * 5.5 + vec2(t*0.013, -t*0.011)) * 0.5 + 0.5;
+
+        // Combine into a 0..1 driver for the cathedral palette
+        float kv = clamp(0.5 + 0.45*kn, 0.0, 1.0) * 0.55
+                 + clamp(kn2 + 0.2, 0.0, 1.0)    * 0.30
+                 + kn3                            * 0.15;
+        kv = clamp(kv, 0.0, 1.0);
+
+        vec3 kColor = cathedralColor(kv);
+
+        // Stained-glass leading lines — bright amber highlights where
+        // the noise crests, like sunlight catching the edges of glass.
+        float highlight = smoothstep(0.62, 0.96, kn2);
+        kColor += vec3(0.98, 0.72, 0.28) * highlight * 0.45;
+
+        // Soft radial vignette so it concentrates at center, leaves
+        // edges darker for legibility
+        float kRadial = exp(-dot(uv, uv) * 0.55);
+
+        // Additive blend, weighted by emergence + radial mask
+        col += kColor * 0.85 * kK * kRadial;
       }
     }
 
