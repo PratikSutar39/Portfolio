@@ -60,7 +60,7 @@ export default function ContactSection() {
         {/* Footer */}
         <div className="border-t border-white/10 mt-24 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-white/40 text-sm">
           <span>© 2026 Pratik Sutar</span>
-          <span>AI Automation Engineer · T-Series · Creative Technology</span>
+          <span>AI Automation Engineer · Creative Technology</span>
         </div>
       </div>
     </section>

@@ -57,7 +57,7 @@ export default function HeroSection() {
         </h1>
 
         <p className="max-w-2xl text-white/70 text-sm md:text-base leading-relaxed px-4 mt-6">
-          AI Automation Engineer at T-Series, building creative pipelines, prompt systems,
+          AI Automation Engineer building creative pipelines, prompt systems,
           production tools, and generative workflows that help music-video teams move from idea to
           execution faster.
         </p>
@@ -83,7 +83,7 @@ export default function HeroSection() {
       {/* Social icons */}
       <div className="relative z-10 flex justify-center gap-4 pb-12">
         <a
-          href="https://linkedin.com"
+          href="https://www.linkedin.com/in/pratiksutar39"
           target="_blank"
           rel="noreferrer"
           className="liquid-glass rounded-full p-4 text-white/80 hover:text-white hover:bg-white/5 transition-all"
@@ -92,7 +92,7 @@ export default function HeroSection() {
           <Linkedin size={20} />
         </a>
         <a
-          href="https://instagram.com"
+          href="https://www.instagram.com/pratiksutar.39"
           target="_blank"
           rel="noreferrer"
           className="liquid-glass rounded-full p-4 text-white/80 hover:text-white hover:bg-white/5 transition-all"

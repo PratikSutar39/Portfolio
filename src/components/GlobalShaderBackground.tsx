@@ -219,7 +219,7 @@ const fragmentShader = /* glsl */ `
         float perp   = length(uv - dir*proj);
         float beam   = exp(-dist*55.) * exp(-perp*perp*16.);
         vec3 beamCol = (mod(fi,2.)==0.) ? ELECTRIC : CYAN;
-        col += beam * beamCol * 0.32 * beamK;
+        col += beam * beamCol * 0.032 * beamK;
       }
     }
 
