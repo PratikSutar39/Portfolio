@@ -1,4 +1,4 @@
-import { Globe, ArrowRight, Linkedin, Instagram, Mail } from 'lucide-react'
+import { Globe, ArrowRight, Linkedin, Instagram, Mail, Github } from 'lucide-react'
 
 export default function HeroSection() {
   return (
@@ -99,6 +99,15 @@ export default function HeroSection() {
           aria-label="Instagram"
         >
           <Instagram size={20} />
+        </a>
+        <a
+          href="https://github.com/PratikSutar39"
+          target="_blank"
+          rel="noreferrer"
+          className="liquid-glass rounded-full p-4 text-white/80 hover:text-white hover:bg-white/5 transition-all"
+          aria-label="GitHub"
+        >
+          <Github size={20} />
         </a>
         <a
           href="mailto:sutarpratik39@gmail.com"
