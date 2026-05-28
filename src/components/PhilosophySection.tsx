@@ -6,7 +6,7 @@ export default function PhilosophySection() {
   const inView = useInView(ref, { once: true, margin: '-100px' })
 
   return (
-    <section className="bg-black py-28 md:py-40 px-6 overflow-hidden">
+    <section className="bg-transparent py-28 md:py-40 px-6 overflow-hidden">
       <div className="max-w-6xl mx-auto" ref={ref}>
         {/* Heading */}
         <motion.h2

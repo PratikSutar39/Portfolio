@@ -8,10 +8,10 @@ export default function AboutSection() {
   return (
     <section
       id="about"
-      className="bg-black pt-32 md:pt-44 pb-10 md:pb-14 px-6 overflow-hidden"
+      className="bg-transparent pt-32 md:pt-44 pb-10 md:pb-14 px-6 overflow-hidden"
       style={{
         background:
-          'radial-gradient(ellipse at top, rgba(255,255,255,0.03) 0%, transparent 70%), #000',
+          'radial-gradient(ellipse at top, rgba(255,255,255,0.03) 0%, transparent 70%)',
       }}
     >
       <div className="max-w-6xl mx-auto" ref={ref}>

@@ -1,6 +1,5 @@
 import { useRef, useEffect } from 'react'
 import { Globe, ArrowRight, Linkedin, Instagram, Mail } from 'lucide-react'
-import HeroBackground from './HeroBackground'
 
 export default function HeroSection() {
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -81,11 +80,9 @@ export default function HeroSection() {
   }, [])
 
   return (
-    <section id="hero" className="min-h-screen bg-black overflow-hidden relative flex flex-col">
-      {/* Cinematic shader background — AI x RED Dragon plasma */}
-      <HeroBackground />
-
-      {/* Optional video overlay (sits on top of shader when present) */}
+    <section id="hero" className="min-h-screen bg-transparent overflow-hidden relative flex flex-col">
+      {/* Optional video overlay — composites over the global 3D scene
+          when /videos/hero.mp4 is present, otherwise stays invisible */}
       <video
         ref={videoRef}
         className="absolute inset-0 w-full h-full object-cover object-bottom z-[1] pointer-events-none mix-blend-screen"
@@ -97,8 +94,8 @@ export default function HeroSection() {
         src="/videos/hero.mp4"
       />
 
-      {/* Dark gradient overlay for legibility */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 z-[2] pointer-events-none" />
+      {/* Very subtle bottom gradient for headline legibility */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/40 z-[2] pointer-events-none" />
 
       {/* Navbar */}
       <nav className="relative z-20 px-6 py-6 mt-2">

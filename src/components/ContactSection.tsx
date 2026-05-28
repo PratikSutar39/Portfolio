@@ -9,10 +9,10 @@ export default function ContactSection() {
   return (
     <section
       id="contact"
-      className="bg-black py-32 px-6 text-center relative overflow-hidden"
+      className="bg-transparent py-32 px-6 text-center relative overflow-hidden"
       style={{
         background:
-          'radial-gradient(ellipse at center, rgba(255,255,255,0.04) 0%, transparent 65%), #000',
+          'radial-gradient(ellipse at center, rgba(255,255,255,0.04) 0%, transparent 65%)',
       }}
     >
       <div className="max-w-6xl mx-auto" ref={ref}>

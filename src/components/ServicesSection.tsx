@@ -86,10 +86,10 @@ export default function ServicesSection() {
 
   return (
     <section
-      className="bg-black py-28 md:py-40 px-6 overflow-hidden"
+      className="bg-transparent py-28 md:py-40 px-6 overflow-hidden"
       style={{
         background:
-          'radial-gradient(ellipse at center, rgba(255,255,255,0.02) 0%, transparent 60%), #000',
+          'radial-gradient(ellipse at center, rgba(255,255,255,0.02) 0%, transparent 60%)',
       }}
     >
       <div className="max-w-6xl mx-auto" ref={ref}>

@@ -8,7 +8,7 @@ export default function FeaturedVideoSection() {
   return (
     <section
       id="work"
-      className="bg-black pt-6 md:pt-10 pb-20 md:pb-32 px-6 overflow-hidden"
+      className="bg-transparent pt-6 md:pt-10 pb-20 md:pb-32 px-6 overflow-hidden"
     >
       <div className="max-w-6xl mx-auto" ref={ref}>
         <motion.div
