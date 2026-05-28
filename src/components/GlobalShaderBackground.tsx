@@ -103,27 +103,86 @@ const fragmentShader = /* glsl */ `
     return exp(-abs(p.y - y)*70.);
   }
 
-  // ── Kaleidoscope: fold sample coordinates into N mirrored
-  //    sectors around the origin, with a rotating phase.
-  vec2 kaleidoscope(vec2 p, float segments, float rotation){
+  // ── Rose-window kaleidoscope helpers ─────────────────────
+  float cellRand(float seg, float ring){
+    return fract(sin(seg * 12.9898 + ring * 78.233) * 43758.5453);
+  }
+
+  // Stained-glass rose window: concentric rings of mirrored
+  // petal cells separated by black leading. Each cell is colored
+  // from a cathedral triad (cobalt, ruby, violet) chosen via a
+  // per-cell hash so the pattern reads as random glass panes.
+  vec3 roseWindow(vec2 p, float t){
+    // Slow anticlockwise rotation of the whole window
+    float rotation = -t * 0.045;
     float cs = cos(rotation);
     float sn = sin(rotation);
     vec2 rp = vec2(cs*p.x - sn*p.y, sn*p.x + cs*p.y);
+
     float r = length(rp);
     float a = atan(rp.y, rp.x);
-    float seg = 6.28318530718 / segments;
-    a = mod(a, seg);
-    a = abs(a - seg*0.5);
-    return vec2(cos(a), sin(a)) * r;
-  }
 
-  // Cathedral stained-glass triad: cobalt → ruby → amber
-  vec3 cathedralColor(float v){
-    vec3 COBALT = vec3(0.14, 0.28, 0.95);
-    vec3 RUBY   = vec3(0.85, 0.12, 0.22);
-    vec3 AMBER  = vec3(0.98, 0.72, 0.28);
-    vec3 c1 = mix(COBALT, RUBY,  smoothstep(0.0, 0.55, v));
-    return        mix(c1,     AMBER, smoothstep(0.55, 1.0, v));
+    // Ring layout — segment count grows with radius
+    float ringIdx, segments, rInner, rOuter, rCenter;
+    if (r < 0.10) {
+      ringIdx = 0.0; segments = 12.0;
+      rInner = 0.00; rOuter = 0.10; rCenter = 0.05;
+    } else if (r < 0.28) {
+      ringIdx = 1.0; segments = 16.0;
+      rInner = 0.10; rOuter = 0.28; rCenter = 0.19;
+    } else if (r < 0.52) {
+      ringIdx = 2.0; segments = 20.0;
+      rInner = 0.28; rOuter = 0.52; rCenter = 0.40;
+    } else if (r < 0.82) {
+      ringIdx = 3.0; segments = 24.0;
+      rInner = 0.52; rOuter = 0.82; rCenter = 0.67;
+    } else {
+      ringIdx = 4.0; segments = 30.0;
+      rInner = 0.82; rOuter = 1.30; rCenter = 1.06;
+    }
+    float ringWidth = rOuter - rInner;
+
+    // Angular folding into one cell of the current ring
+    float seg = 6.28318530718 / segments;
+    float aOfs = mod(a + seg*0.5, seg) - seg*0.5;
+    float segIdx = floor((a + 3.14159265) / seg);
+
+    // Petal coordinate — angular and radial offset from cell center
+    float aw = aOfs * r;
+    float rw = (r - rCenter) / max(ringWidth, 0.001);
+    float petalD = length(vec2(aw * 1.6, rw * 0.55));
+
+    // Black leading lines — thicken near cell boundaries
+    float angRatio = abs(aOfs) / (seg * 0.5);     // 0 at cell center, 1 at boundary
+    float radRatio = abs(r - rCenter) / (ringWidth * 0.5);
+    float angEdge = smoothstep(0.55, 0.95, angRatio);
+    float radEdge = smoothstep(0.60, 0.95, radRatio);
+    float leading = max(angEdge, radEdge);
+
+    // Per-cell color from the cathedral triad
+    float h = cellRand(segIdx, ringIdx);
+    vec3 COBALT = vec3(0.15, 0.30, 0.95);
+    vec3 RUBY   = vec3(0.92, 0.15, 0.28);
+    vec3 VIOLET = vec3(0.62, 0.18, 0.92);
+    vec3 c1 = mix(COBALT, RUBY,   smoothstep(0.0, 0.50, h));
+    vec3 cellCol = mix(c1, VIOLET, smoothstep(0.50, 1.0, h));
+
+    // Bright stained-glass glow within the cell
+    float glow = exp(-petalD * petalD * 6.0);
+    cellCol *= 0.40 + glow * 1.25;
+
+    // Intra-cell glass texture (subtle fbm) for variation
+    float tex = fbm(vec2(aOfs * 22.0, r * 17.0 + ringIdx * 7.0)) * 0.15;
+    cellCol *= 1.0 + tex;
+
+    // Apply black leading
+    cellCol *= 1.0 - leading * 0.94;
+
+    // Outer fade so the window edges blend into the plasma
+    float windowMask = smoothstep(1.35, 0.85, r);
+    cellCol *= windowMask;
+
+    return cellCol;
   }
 
   void main(){
@@ -226,41 +285,20 @@ const fragmentShader = /* glsl */ `
       col += cg * mix(CYAN, ELECTRIC, 0.4) * 0.05 * cgK;
     }
 
-    // ── Cathedral kaleidoscope — slow anticlockwise rotation,
-    //     emerges gradually from middle → bottom. Stained-glass
-    //     triad: deep cobalt blue, ruby red, golden amber. ───
+    // ── Rose-window stained-glass kaleidoscope ──
+    //     Multi-ring petal cells separated by black leading,
+    //     painted in a cobalt / ruby / violet cathedral triad.
+    //     Rotates slowly anticlockwise. Emerges gradually so the
+    //     top → middle → bottom transition stays smooth.
     {
-      float kK = smoothstep(0.40, 0.95, s); // gradual emergence
+      float kK = smoothstep(0.35, 0.85, s);
       if (kK > 0.0001) {
-        // Negative rotation = anticlockwise rotation of the visible pattern
-        float kRot = -t * 0.055;
-        vec2 kp = uv * 1.35;
-        vec2 ks = kaleidoscope(kp, 8.0, kRot);
+        vec3 rose = roseWindow(uv * 1.45, t);
 
-        // Layered flowing pattern sampled through the folded coords
-        float kn  = flow(ks * 1.7 + vec2(t*0.04, 0.0), t*0.5);
-        float kn2 = fbm (ks * 3.2 - vec2(t*0.022, t*0.018));
-        float kn3 = snoise(ks * 5.5 + vec2(t*0.013, -t*0.011)) * 0.5 + 0.5;
-
-        // Combine into a 0..1 driver for the cathedral palette
-        float kv = clamp(0.5 + 0.45*kn, 0.0, 1.0) * 0.55
-                 + clamp(kn2 + 0.2, 0.0, 1.0)    * 0.30
-                 + kn3                            * 0.15;
-        kv = clamp(kv, 0.0, 1.0);
-
-        vec3 kColor = cathedralColor(kv);
-
-        // Stained-glass leading lines — bright amber highlights where
-        // the noise crests, like sunlight catching the edges of glass.
-        float highlight = smoothstep(0.62, 0.96, kn2);
-        kColor += vec3(0.98, 0.72, 0.28) * highlight * 0.45;
-
-        // Soft radial vignette so it concentrates at center, leaves
-        // edges darker for legibility
-        float kRadial = exp(-dot(uv, uv) * 0.55);
-
-        // Additive blend, weighted by emergence + radial mask
-        col += kColor * 0.85 * kK * kRadial;
+        // At full strength, rose dominates and partially blacks out
+        // the plasma where the leading lines fall. Mix is weighted by
+        // kK so the rose fades in gradually through the middle section.
+        col = mix(col, col * 0.30 + rose * 1.40, kK);
       }
     }
 
