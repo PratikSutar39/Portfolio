@@ -1,3 +1,4 @@
+import GlobalShaderBackground from './components/GlobalShaderBackground'
 import HeroSection from './components/HeroSection'
 import AboutSection from './components/AboutSection'
 import FeaturedVideoSection from './components/FeaturedVideoSection'
@@ -6,14 +7,13 @@ import ServicesSection from './components/ServicesSection'
 import ProjectsSection from './components/ProjectsSection'
 import ProcessSection from './components/ProcessSection'
 import ContactSection from './components/ContactSection'
-import SceneBackground from './components/SceneBackground'
 
 export default function App() {
   return (
-    <div className="relative bg-black min-h-screen">
-      {/* Global animated 3D background — RED Dragon camera that
-          dismantles as you scroll and reassembles on scroll up */}
-      <SceneBackground />
+    <div className="relative bg-[#06010a] min-h-screen">
+      {/* Fixed plasma shader — runs behind every section,
+          morphs as you scroll through the palette */}
+      <GlobalShaderBackground />
 
       <main className="relative z-10">
         <HeroSection />
