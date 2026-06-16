@@ -1,6 +1,8 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
+import YouTubeTile from './YouTubeTile'
+import VideoLightbox from './VideoLightbox'
 
 const cards = [
   {
@@ -8,28 +10,28 @@ const cards = [
     title: 'Character & Image Pipelines',
     description:
       'I build generative pipelines in ComfyUI with FLUX and LoRA fine-tuning — including a dual-model system that separates identity from style to turn a single photo into a consistent, high-resolution, game-ready character.',
-    video: '/videos/storyboard-pipeline.mp4',
+    youtubeId: 'O6W9wV6XIpk',
   },
   {
     tag: 'RAG / Automation',
     title: 'Applied AI Products',
     description:
       'I ship AI products that pair deterministic reasoning with LLMs — RAG over ChromaDB, FastAPI + Pydantic rule engines, and report generation — so the logic stays trustworthy while the model only explains the result.',
-    video: '/videos/ai-apps.mp4',
+    youtubeId: 'TM8wQgA1XSI',
   },
   {
     tag: 'Full-Stack AI',
     title: 'AI Web Platforms',
     description:
       'I build complete AI web apps with Next.js, TypeScript, Tailwind, and Supabase — natural-language search, LLM match scoring, auth, and messaging — turning model capabilities into products people can actually use.',
-    video: '/videos/generative-video.mp4',
+    youtubeId: 'EKISAz0src8',
   },
   {
     tag: 'CV / Deep Learning',
     title: 'Computer Vision & Models',
     description:
       'I train and apply deep-learning models for vision tasks — from convolutional traffic-sign recognition to behavioral-cloning driving experiments — grounding my AI work in real model training, not just APIs.',
-    video: '/videos/automation-dashboard.mp4',
+    youtubeId: 'FwjC223xx4s',
   },
 ]
 
@@ -37,10 +39,12 @@ function ServiceCard({
   card,
   index,
   inView,
+  onPlay,
 }: {
   card: (typeof cards)[0]
   index: number
   inView: boolean
+  onPlay: (id: string) => void
 }) {
   return (
     <motion.div
@@ -51,16 +55,8 @@ function ServiceCard({
     >
       {/* Video area */}
       <div className="aspect-video overflow-hidden relative">
-        <video
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          muted
-          autoPlay
-          loop
-          playsInline
-          preload="auto"
-          src={card.video}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+        <YouTubeTile videoId={card.youtubeId} onPlay={onPlay} />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
       </div>
 
       {/* Body */}
@@ -83,6 +79,7 @@ function ServiceCard({
 export default function ServicesSection() {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '-100px' })
+  const [activeId, setActiveId] = useState<string | null>(null)
 
   return (
     <section
@@ -111,10 +108,11 @@ export default function ServicesSection() {
         {/* Cards grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {cards.map((card, i) => (
-            <ServiceCard key={card.title} card={card} index={i} inView={inView} />
+            <ServiceCard key={card.title} card={card} index={i} inView={inView} onPlay={setActiveId} />
           ))}
         </div>
       </div>
+      <VideoLightbox id={activeId} onClose={() => setActiveId(null)} />
     </section>
   )
 }

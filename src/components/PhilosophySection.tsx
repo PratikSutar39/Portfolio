@@ -1,9 +1,12 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
+import YouTubeTile from './YouTubeTile'
+import VideoLightbox from './VideoLightbox'
 
 export default function PhilosophySection() {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '-100px' })
+  const [activeId, setActiveId] = useState<string | null>(null)
 
   return (
     <section className="bg-transparent py-28 md:py-40 px-6 overflow-hidden">
@@ -32,15 +35,7 @@ export default function PhilosophySection() {
             transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="rounded-3xl overflow-hidden aspect-[4/3]"
           >
-            <video
-              className="w-full h-full object-cover"
-              muted
-              autoPlay
-              loop
-              playsInline
-              preload="auto"
-              src="/videos/ai-cinema-process.mp4"
-            />
+            <YouTubeTile videoId="K7uhTGTLRVY" onPlay={setActiveId} />
           </motion.div>
 
           {/* Right — text blocks */}
@@ -80,6 +75,7 @@ export default function PhilosophySection() {
           </motion.div>
         </div>
       </div>
+      <VideoLightbox id={activeId} onClose={() => setActiveId(null)} />
     </section>
   )
 }
