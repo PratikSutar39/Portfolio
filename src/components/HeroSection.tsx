@@ -57,9 +57,9 @@ export default function HeroSection() {
         </h1>
 
         <p className="max-w-2xl text-white/70 text-sm md:text-base leading-relaxed px-4 mt-6">
-          AI Automation Engineer building creative pipelines, prompt systems,
-          production tools, and generative workflows that help music-video teams move from idea to
-          execution faster.
+          AI Automation Engineer working across generative AI, RAG, and full-stack
+          systems — from identity-preserving character pipelines to trustworthy AI products and
+          decision-support tools that turn models into things people can actually use.
         </p>
 
         {/* CTA row */}

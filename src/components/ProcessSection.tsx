@@ -4,9 +4,9 @@ import { motion, useInView } from 'framer-motion'
 const steps = [
   {
     number: '01',
-    title: 'Decode the brief',
+    title: 'Decode the problem',
     description:
-      'Understand the song, emotion, visual grammar, timeline, production constraints, and final output requirement.',
+      'Understand the real goal, the constraints, the people who will use it, and what a trustworthy final output actually needs to look like.',
   },
   {
     number: '02',
@@ -18,7 +18,7 @@ const steps = [
     number: '03',
     title: 'Generate and refine',
     description:
-      'Use AI tools to generate characters, scenes, frames, motion tests, and storyboard options while preserving continuity.',
+      'Use AI models — diffusion, LLMs, RAG — to generate candidates, then iterate while preserving identity, accuracy, and continuity.',
   },
   {
     number: '04',
@@ -30,7 +30,7 @@ const steps = [
     number: '05',
     title: 'Deliver with clarity',
     description:
-      'Package the output into production sheets, prompts, timelines, visual references, and handoff-ready assets.',
+      'Ship the result as a usable product — clear UI, explained outputs, reports, and handoff-ready assets people can trust.',
   },
 ]
 

@@ -4,32 +4,32 @@ import { ArrowUpRight } from 'lucide-react'
 
 const cards = [
   {
-    tag: 'Prompt Systems',
-    title: 'AI Storyboard & Character Pipelines',
+    tag: 'Generative AI',
+    title: 'Character & Image Pipelines',
     description:
-      'I build structured prompt systems for character references, cinematic scenes, video generation, and shot-by-shot storyboard workflows that help production teams visualize songs before execution.',
+      'I build generative pipelines in ComfyUI with FLUX and LoRA fine-tuning — including a dual-model system that separates identity from style to turn a single photo into a consistent, high-resolution, game-ready character.',
     video: '/videos/storyboard-pipeline.mp4',
   },
   {
-    tag: 'Automation',
-    title: 'Production Workflow Tools',
+    tag: 'RAG / Automation',
+    title: 'Applied AI Products',
     description:
-      'I design tools that calculate delivery timelines, track project stages, estimate first-cut dates, and reduce confusion between creative teams, managers, and production stakeholders.',
-    video: '/videos/automation-dashboard.mp4',
+      'I ship AI products that pair deterministic reasoning with LLMs — RAG over ChromaDB, FastAPI + Pydantic rule engines, and report generation — so the logic stays trustworthy while the model only explains the result.',
+    video: '/videos/ai-apps.mp4',
   },
   {
-    tag: 'Generative Video',
-    title: 'AI Music Video Experiments',
+    tag: 'Full-Stack AI',
+    title: 'AI Web Platforms',
     description:
-      'I work across AI image and video tools to create cinematic frames, scene references, motion prompts, and visual experiments for music-led storytelling.',
+      'I build complete AI web apps with Next.js, TypeScript, Tailwind, and Supabase — natural-language search, LLM match scoring, auth, and messaging — turning model capabilities into products people can actually use.',
     video: '/videos/generative-video.mp4',
   },
   {
-    tag: 'RAG / AI Apps',
-    title: 'Applied AI Product Prototypes',
+    tag: 'CV / Deep Learning',
+    title: 'Computer Vision & Models',
     description:
-      'I also build AI product prototypes using RAG, LangChain, Streamlit, and modern frontend systems — turning ideas into usable demos, dashboards, and decision-support tools.',
-    video: '/videos/ai-apps.mp4',
+      'I train and apply deep-learning models for vision tasks — from convolutional traffic-sign recognition to behavioral-cloning driving experiments — grounding my AI work in real model training, not just APIs.',
+    video: '/videos/automation-dashboard.mp4',
   },
 ]
 

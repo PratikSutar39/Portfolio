@@ -5,31 +5,35 @@ import { ArrowUpRight } from 'lucide-react'
 const projects = [
   {
     number: '01',
-    title: 'AI Music Video Storyboard System',
-    category: 'Creative AI / Production',
+    title: 'CarTrust — AI Used-Car Trust Engine',
+    category: 'RAG / AI Product',
     description:
-      'A structured workflow for creating 75+ frame cinematic storyboards for a 150-second song, including character locking, timestamp mapping, scene continuity, and video-generation-ready prompts.',
+      'A web app that helps first-time used-car buyers decide with confidence. A deterministic rule engine scores five trust dimensions and returns a BUY / NEGOTIATE / WALK AWAY verdict with flagged contradictions and a 3-year cost projection. Built with Next.js 16, FastAPI, Pydantic, ChromaDB RAG, and Llama 3.3 70B for plain-language explanations.',
+    url: 'https://github.com/PratikSutar39/CarTrust',
   },
   {
     number: '02',
-    title: 'AI Team Project Planner',
-    category: 'Internal Tool / Automation',
+    title: 'SuperNetworkAI — Ikigai Matching Platform',
+    category: 'Full-Stack AI / Next.js',
     description:
-      'A planning interface for AI teams that estimates delivery milestones based on video length, project type, non-working days, and production norms — helping clarify character sheet, storyboard, and video deadlines.',
+      'An AI networking platform that connects people on the intersection of passion, skill, purpose, and pay — not just skill overlap. Natural-language search, AI match scoring with personalised explanations, and in-app messaging. Built with Next.js 14, TypeScript, Supabase, NextAuth, and OpenRouter LLMs.',
+    url: 'https://github.com/PratikSutar39/SuperNetworkAI',
   },
   {
     number: '03',
-    title: 'Generative Character Reference Pipeline',
-    category: 'Prompt Engineering / Visual Design',
+    title: 'Pixel Art Character Generator',
+    category: 'Generative AI / Diffusion',
     description:
-      'A repeatable process for creating consistent AI characters across wardrobe, angles, facial identity, styling, and cinematic production requirements.',
+      'A ComfyUI pipeline that turns a user photo into a high-resolution, game-ready pixel-art character. A dual-model approach separates an identity model (preserves facial features) from a style model (pixel-art coherence), powered by FLUX texture synthesis and LoRA fine-tuning.',
+    url: 'https://github.com/PratikSutar39/pixel-art-character-generator',
   },
   {
     number: '04',
-    title: 'CarTrust AI Prototype',
-    category: 'RAG / AI Product',
+    title: 'IntelliDoc — Document Intelligence',
+    category: 'RAG / Automation',
     description:
-      'An AI-powered used-car trust and evidence prototype using RAG, Streamlit, LangChain, structured reasoning, and report generation to support better buying decisions.',
+      'A centralized AI-powered document intelligence platform that automates document digitization, classification, validation, and authenticity checks for government services — reducing manual verification overhead in high-volume workflows.',
+    url: 'https://github.com/PratikSutar39/IntelliDoc',
   },
 ]
 
@@ -87,14 +91,17 @@ export default function ProjectsSection() {
 
                 {/* CTA */}
                 <div className="flex items-center gap-2 mt-4 md:mt-0 flex-shrink-0">
-                  <motion.button
+                  <motion.a
+                    href={project.url}
+                    target="_blank"
+                    rel="noreferrer"
                     whileHover={{ scale: 1.04 }}
                     whileTap={{ scale: 0.96 }}
                     className="liquid-glass rounded-full px-6 py-2 text-white/70 text-sm font-medium flex items-center gap-2 hover:text-white transition-colors"
                   >
-                    View case study
+                    View project
                     <ArrowUpRight size={14} />
-                  </motion.button>
+                  </motion.a>
                 </div>
               </div>
             </motion.div>

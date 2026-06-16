@@ -53,9 +53,10 @@ export default function AboutSection() {
           transition={{ duration: 0.8, delay: 0.25 }}
           className="max-w-3xl mt-8 text-white/60 text-base md:text-lg leading-relaxed"
         >
-          My work focuses on turning complex creative production into structured, repeatable
-          AI-powered systems — from character references and storyboard pipelines to prompt
-          engineering, automation dashboards, and generative video workflows.
+          My work spans generative AI and applied AI products — identity-preserving character
+          pipelines built with ComfyUI, FLUX, and LoRA, RAG-powered decision systems, full-stack
+          AI web platforms, and computer-vision models. The throughline stays the same: connect
+          creative intent with systems that are trustworthy, repeatable, and genuinely useful.
         </motion.p>
       </div>
     </section>
