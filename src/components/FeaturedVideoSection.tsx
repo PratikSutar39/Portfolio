@@ -1,12 +1,9 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
-import YouTubeTile from './YouTubeTile'
-import VideoLightbox from './VideoLightbox'
 
 export default function FeaturedVideoSection() {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '-100px' })
-  const [activeId, setActiveId] = useState<string | null>(null)
 
   return (
     <section
@@ -20,8 +17,16 @@ export default function FeaturedVideoSection() {
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
           className="rounded-3xl overflow-hidden aspect-video relative"
         >
-          {/* Showreel */}
-          <YouTubeTile videoId="cOpgJSf6G-A" onPlay={setActiveId} />
+          {/* Showreel video */}
+          <video
+            className="w-full h-full object-cover"
+            muted
+            autoPlay
+            loop
+            playsInline
+            preload="auto"
+            src="/videos/showreel.mp4"
+          />
 
           {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
@@ -52,7 +57,6 @@ export default function FeaturedVideoSection() {
           </div>
         </motion.div>
       </div>
-      <VideoLightbox id={activeId} onClose={() => setActiveId(null)} />
     </section>
   )
 }
