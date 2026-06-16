@@ -53,10 +53,11 @@ export default function AboutSection() {
           transition={{ duration: 0.8, delay: 0.25 }}
           className="max-w-3xl mt-8 text-white/60 text-base md:text-lg leading-relaxed"
         >
-          My work spans generative AI and applied AI products — identity-preserving character
-          pipelines built with ComfyUI, FLUX, and LoRA, RAG-powered decision systems, full-stack
-          AI web platforms, and computer-vision models. The throughline stays the same: connect
-          creative intent with systems that are trustworthy, repeatable, and genuinely useful.
+          My work spans agentic AI, RAG, and full-stack LLM products — autonomous agents with
+          LangChain, CrewAI, and AutoGen, retrieval systems with hybrid search and re-ranking, and
+          generative character pipelines built in ComfyUI with FLUX and LoRA. My focus is
+          production-readiness: systems that consider scalability, cost, and real deployment — not
+          just impressive demos.
         </motion.p>
       </div>
     </section>

@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { Mail, ArrowRight } from 'lucide-react'
+import { Mail, ArrowRight, Globe } from 'lucide-react'
 
 export default function ContactSection() {
   const ref = useRef<HTMLDivElement>(null)
@@ -42,25 +42,40 @@ export default function ContactSection() {
           or production technology experiments, reach out and let's connect.
         </motion.p>
 
-        {/* Email CTA */}
-        <motion.a
-          href="mailto:sutarpratik39@gmail.com"
+        {/* CTAs */}
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.3 }}
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          className="liquid-glass rounded-full px-8 py-4 text-white text-sm font-medium inline-flex items-center gap-3 mt-8 hover:bg-white/5 transition-colors"
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8"
         >
-          <Mail size={18} />
-          Contact Me
-          <ArrowRight size={16} />
-        </motion.a>
+          <motion.a
+            href="mailto:sutarpratik39@gmail.com"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            className="liquid-glass rounded-full px-8 py-4 text-white text-sm font-medium inline-flex items-center gap-3 hover:bg-white/5 transition-colors"
+          >
+            <Mail size={18} />
+            Contact Me
+            <ArrowRight size={16} />
+          </motion.a>
+          <motion.a
+            href="https://pratik-sutar.vercel.app/"
+            target="_blank"
+            rel="noreferrer"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            className="liquid-glass rounded-full px-8 py-4 text-white/80 text-sm font-medium inline-flex items-center gap-3 hover:text-white hover:bg-white/5 transition-colors"
+          >
+            <Globe size={18} />
+            Read the Blog
+          </motion.a>
+        </motion.div>
 
         {/* Footer */}
         <div className="border-t border-white/10 mt-24 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-white/40 text-sm">
-          <span>© 2026 Pratik Sutar</span>
-          <span>AI Automation Engineer · Creative Technology</span>
+          <span>© 2026 Pratik Sutar · Pune, India</span>
+          <span>Gen AI Engineer · T-Series · Creative Technology</span>
         </div>
       </div>
     </section>

@@ -57,9 +57,9 @@ export default function HeroSection() {
         </h1>
 
         <p className="max-w-2xl text-white/70 text-sm md:text-base leading-relaxed px-4 mt-6">
-          AI Automation Engineer working across generative AI, RAG, and full-stack
-          systems — from identity-preserving character pipelines to trustworthy AI products and
-          decision-support tools that turn models into things people can actually use.
+          Gen AI Engineer building production-ready AI systems — RAG pipelines,
+          autonomous agents, and full-stack LLM products, with generative character work in
+          ComfyUI — turning models into tools people can actually use.
         </p>
 
         {/* CTA row */}

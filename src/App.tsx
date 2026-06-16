@@ -5,7 +5,10 @@ import FeaturedVideoSection from './components/FeaturedVideoSection'
 import PhilosophySection from './components/PhilosophySection'
 import ServicesSection from './components/ServicesSection'
 import ProjectsSection from './components/ProjectsSection'
+import ExperienceSection from './components/ExperienceSection'
+import SkillsSection from './components/SkillsSection'
 import ProcessSection from './components/ProcessSection'
+import EducationSection from './components/EducationSection'
 import ContactSection from './components/ContactSection'
 
 export default function App() {
@@ -22,7 +25,10 @@ export default function App() {
         <PhilosophySection />
         <ServicesSection />
         <ProjectsSection />
+        <ExperienceSection />
+        <SkillsSection />
         <ProcessSection />
+        <EducationSection />
         <ContactSection />
       </main>
     </div>
