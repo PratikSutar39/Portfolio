@@ -3,7 +3,12 @@ import { motion, useInView } from 'framer-motion'
 import YouTubeTile from './YouTubeTile'
 import VideoLightbox from './VideoLightbox'
 
-const FEATURED_ID = 'J1sABGXaSm0'
+const films = [
+  { id: 'J1sABGXaSm0', title: 'Tipu v General Munro' },
+  { id: 'LhZusV6yuX8', title: 'Shree Krishna v Kaaliya Naag' },
+  { id: 'CskjCS77sI8', title: "India's Lost Treasure" },
+  { id: 'y4RKDcT5TRw', title: 'Boxing Fight Sequence' },
+]
 
 export default function FeaturedVideoSection() {
   const ref = useRef<HTMLDivElement>(null)
@@ -16,49 +21,41 @@ export default function FeaturedVideoSection() {
       className="bg-transparent pt-6 md:pt-10 pb-20 md:pb-32 px-6 overflow-hidden"
     >
       <div className="max-w-6xl mx-auto" ref={ref}>
-        <motion.div
-          initial={{ opacity: 0, y: 60 }}
+        {/* Section label */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="rounded-3xl overflow-hidden aspect-video relative group"
+          transition={{ duration: 0.6 }}
+          className="text-white/40 text-xs tracking-widest uppercase mb-6"
         >
-          {/* Featured highlight video */}
-          <YouTubeTile videoId={FEATURED_ID} onPlay={setActiveId} />
+          Featured Films
+        </motion.p>
 
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent pointer-events-none" />
-
-          {/* Bottom overlay content */}
-          <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 flex flex-col md:flex-row md:items-end justify-between gap-6 pointer-events-none">
-            {/* Left card */}
-            <div className="liquid-glass rounded-2xl p-6 md:p-8 max-w-md">
-              <p className="text-white/50 text-xs tracking-widest uppercase mb-3">
-                Featured Work
-              </p>
-              <h3
-                className="text-white text-2xl md:text-3xl leading-tight tracking-tight mb-2"
-                style={{ fontFamily: '"Instrument Serif", serif' }}
-              >
-                Tipu v General Munro
-              </h3>
-              <p className="text-white/60 text-sm md:text-base leading-relaxed">
-                An AI-generated cinematic sequence built with Seedance 2.0 — my flagship
-                experiment in directing story, performance, and motion through generative video.
-              </p>
-            </div>
-
-            {/* Right button — re-enable pointer events on the link itself */}
-            <motion.button
-              type="button"
-              onClick={() => setActiveId(FEATURED_ID)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="liquid-glass rounded-full px-8 py-3 text-white text-sm font-medium whitespace-nowrap self-end md:self-auto pointer-events-auto"
+        {/* 4-tile grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
+          {films.map((film, i) => (
+            <motion.div
+              key={film.id}
+              initial={{ opacity: 0, y: 40 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.1 * i, ease: [0.16, 1, 0.3, 1] }}
+              className="liquid-glass rounded-2xl overflow-hidden group"
             >
-              Watch the Film
-            </motion.button>
-          </div>
-        </motion.div>
+              {/* Thumbnail */}
+              <div className="aspect-video overflow-hidden relative">
+                <YouTubeTile videoId={film.id} onPlay={setActiveId} />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
+              </div>
+
+              {/* Title */}
+              <div className="p-3">
+                <p className="text-white text-sm tracking-tight leading-snug">
+                  {film.title}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
 
       <VideoLightbox id={activeId} onClose={() => setActiveId(null)} />
