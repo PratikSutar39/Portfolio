@@ -14,25 +14,12 @@ html {
   scroll-behavior: smooth;
 }
 
-html,
-body,
-#root {
-  background: #0c0c0c;
-}
-
 body {
+  background: #000;
   color: #fff;
-  font-family: 'Kanit', sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-/* Hero gradient text */
-.hero-heading {
-  background: linear-gradient(180deg, #646973 0%, #bbccd7 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
 /* Liquid Glass — darker, denser base so text reads cleanly over the

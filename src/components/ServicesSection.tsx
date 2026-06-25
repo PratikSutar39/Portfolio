@@ -1,77 +1,119 @@
-import FadeIn from './FadeIn'
+import { useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
+import { ArrowUpRight } from 'lucide-react'
 
-const services = [
+const cards = [
   {
-    number: '01',
-    name: 'Character & Image Pipelines',
+    tag: 'Generative AI',
+    title: 'Character & Image Pipelines',
     description:
-      'Generative pipelines in ComfyUI with FLUX and LoRA fine-tuning — including a dual-model system that separates identity from style to turn a single photo into a consistent, high-resolution, game-ready character.',
+      'I build generative pipelines in ComfyUI with FLUX and LoRA fine-tuning — including a dual-model system that separates identity from style to turn a single photo into a consistent, high-resolution, game-ready character.',
+    video: '/videos/storyboard-pipeline.mp4',
   },
   {
-    number: '02',
-    name: 'Applied AI Products',
+    tag: 'RAG / Automation',
+    title: 'Applied AI Products',
     description:
-      'AI products that pair deterministic reasoning with LLMs — RAG over ChromaDB, FastAPI + Pydantic rule engines, and report generation — so the logic stays trustworthy while the model only explains the result.',
+      'I ship AI products that pair deterministic reasoning with LLMs — RAG over ChromaDB, FastAPI + Pydantic rule engines, and report generation — so the logic stays trustworthy while the model only explains the result.',
+    video: '/videos/ai-apps.mp4',
   },
   {
-    number: '03',
-    name: 'AI Web Platforms',
+    tag: 'Full-Stack AI',
+    title: 'AI Web Platforms',
     description:
-      'Complete AI web apps with Next.js, TypeScript, Tailwind, and Supabase — natural-language search, LLM match scoring, auth, and messaging — turning model capabilities into products people can actually use.',
+      'I build complete AI web apps with Next.js, TypeScript, Tailwind, and Supabase — natural-language search, LLM match scoring, auth, and messaging — turning model capabilities into products people can actually use.',
+    video: '/videos/generative-video.mp4',
   },
   {
-    number: '04',
-    name: 'Computer Vision & Models',
+    tag: 'CV / Deep Learning',
+    title: 'Computer Vision & Models',
     description:
-      'Training and applying deep-learning models for vision tasks — from convolutional traffic-sign recognition to behavioral-cloning driving experiments — grounding the work in real model training, not just APIs.',
+      'I train and apply deep-learning models for vision tasks — from convolutional traffic-sign recognition to behavioral-cloning driving experiments — grounding my AI work in real model training, not just APIs.',
+    video: '/videos/automation-dashboard.mp4',
   },
 ]
 
+function ServiceCard({
+  card,
+  index,
+  inView,
+}: {
+  card: (typeof cards)[0]
+  index: number
+  inView: boolean
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.8, delay: 0.15 * index, ease: [0.16, 1, 0.3, 1] }}
+      className="liquid-glass rounded-3xl overflow-hidden group"
+    >
+      {/* Video area */}
+      <div className="aspect-video overflow-hidden relative">
+        <video
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          muted
+          autoPlay
+          loop
+          playsInline
+          preload="auto"
+          src={card.video}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+      </div>
+
+      {/* Body */}
+      <div className="p-6 md:p-8">
+        <div className="flex items-center justify-between mb-4">
+          <span className="text-white/40 text-xs tracking-widest uppercase">{card.tag}</span>
+          <div className="liquid-glass rounded-full p-2">
+            <ArrowUpRight size={16} className="text-white/60" />
+          </div>
+        </div>
+        <h3 className="text-white text-xl md:text-2xl mb-3 tracking-tight">
+          {card.title}
+        </h3>
+        <p className="text-white/50 text-sm leading-relaxed">{card.description}</p>
+      </div>
+    </motion.div>
+  )
+}
+
 export default function ServicesSection() {
+  const ref = useRef<HTMLDivElement>(null)
+  const inView = useInView(ref, { once: true, margin: '-100px' })
+
   return (
     <section
-      className="bg-white rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32 relative z-10"
+      className="bg-transparent py-28 md:py-40 px-6 overflow-hidden"
+      style={{
+        background:
+          'radial-gradient(ellipse at center, rgba(255,255,255,0.02) 0%, transparent 60%)',
+      }}
     >
-      <h2
-        className="text-[#0C0C0C] font-black uppercase text-center mb-16 sm:mb-20 md:mb-28"
-        style={{ fontFamily: 'Kanit, sans-serif', fontSize: 'clamp(3rem, 12vw, 160px)' }}
-      >
-        Services
-      </h2>
+      <div className="max-w-6xl mx-auto" ref={ref}>
+        {/* Header row */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7 }}
+          className="flex justify-between items-end mb-12"
+        >
+          <h2 className="text-3xl md:text-5xl text-white tracking-tight">
+            What I Build
+          </h2>
+          <span className="text-white/40 text-sm hidden md:block">
+            AI Automation / Creative Tech
+          </span>
+        </motion.div>
 
-      <div className="max-w-5xl mx-auto">
-        {services.map((service, i) => (
-          <FadeIn key={service.number} delay={i * 0.1}>
-            <div
-              className="flex items-start gap-5 sm:gap-8 md:gap-12 py-8 sm:py-10 md:py-12"
-              style={{
-                borderTop: i === 0 ? '1px solid rgba(12,12,12,0.15)' : 'none',
-                borderBottom: '1px solid rgba(12,12,12,0.15)',
-              }}
-            >
-              <span
-                className="text-[#0C0C0C] font-black leading-none flex-shrink-0"
-                style={{ fontFamily: 'Kanit, sans-serif', fontSize: 'clamp(3rem, 10vw, 140px)' }}
-              >
-                {service.number}
-              </span>
-              <div className="pt-1 sm:pt-2 md:pt-3">
-                <h3
-                  className="text-[#0C0C0C] font-medium uppercase mb-3"
-                  style={{ fontSize: 'clamp(1rem, 2.2vw, 2.1rem)' }}
-                >
-                  {service.name}
-                </h3>
-                <p
-                  className="text-[#0C0C0C] font-light leading-relaxed max-w-2xl"
-                  style={{ fontSize: 'clamp(0.85rem, 1.6vw, 1.25rem)', opacity: 0.6 }}
-                >
-                  {service.description}
-                </p>
-              </div>
-            </div>
-          </FadeIn>
-        ))}
+        {/* Cards grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+          {cards.map((card, i) => (
+            <ServiceCard key={card.title} card={card} index={i} inView={inView} />
+          ))}
+        </div>
       </div>
     </section>
   )
