@@ -8,6 +8,7 @@ export default {
     extend: {
       fontFamily: {
         serif: ['"Instrument Serif"', 'serif'],
+        kanit: ['Kanit', 'sans-serif'],
       },
     },
   },
