@@ -5,9 +5,9 @@ import VideoLightbox from './VideoLightbox'
 
 const films = [
   { id: 'J1sABGXaSm0', title: 'Tipu v General Munro' },
+  { id: 'VC8-sgDCu44', title: '52 Bahane' },
   { id: 'LhZusV6yuX8', title: 'Shree Krishna v Kaaliya Naag' },
   { id: 'CskjCS77sI8', title: "India's Lost Treasure" },
-  { id: 'y4RKDcT5TRw', title: 'Boxing Fight Sequence' },
 ]
 
 export default function FeaturedVideoSection() {

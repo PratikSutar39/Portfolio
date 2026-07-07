@@ -10,6 +10,7 @@ const videos = [
   { id: 'TM8wQgA1XSI', title: 'Beimaan Sanam Tha Beimaan Mohabbat' },
   { id: 'EKISAz0src8', title: 'Beedio Call' },
   { id: 'FwjC223xx4s', title: 'Apne Haathon Se Mujhe Dedo Zeher' },
+  { id: 'y4RKDcT5TRw', title: 'Boxing Fight Sequence' },
 ]
 
 export default function PhilosophySection() {
