@@ -53,11 +53,10 @@ export default function AboutSection() {
           transition={{ duration: 0.8, delay: 0.25 }}
           className="max-w-3xl mt-8 text-white/60 text-base md:text-lg leading-relaxed"
         >
-          My work spans agentic AI, RAG, and full-stack LLM products — autonomous agents with
-          LangChain, CrewAI, and AutoGen, retrieval systems with hybrid search and re-ranking, and
-          generative character pipelines built in ComfyUI with FLUX and LoRA. My focus is
-          production-readiness: systems that consider scalability, cost, and real deployment — not
-          just impressive demos.
+          My work centers on generative media — character and image pipelines built in ComfyUI
+          with FLUX and LoRA, along with video and image generation using tools like Higgsfield,
+          Kling, and Google Veo. My focus is production-readiness: systems that consider
+          scalability, cost, and real deployment — not just impressive demos.
         </motion.p>
       </div>
     </section>
