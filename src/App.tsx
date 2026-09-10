@@ -3,7 +3,6 @@ import HeroSection from './components/HeroSection'
 import AboutSection from './components/AboutSection'
 import FeaturedVideoSection from './components/FeaturedVideoSection'
 import PhilosophySection from './components/PhilosophySection'
-import ServicesSection from './components/ServicesSection'
 import ProjectsSection from './components/ProjectsSection'
 import ExperienceSection from './components/ExperienceSection'
 import SkillsSection from './components/SkillsSection'
@@ -23,7 +22,6 @@ export default function App() {
         <AboutSection />
         <FeaturedVideoSection />
         <PhilosophySection />
-        <ServicesSection />
         <ProjectsSection />
         <ExperienceSection />
         <SkillsSection />

@@ -52,7 +52,7 @@ export default function ProjectsSection() {
           className="text-5xl md:text-7xl lg:text-8xl text-white tracking-tight mb-16"
           style={{ fontFamily: '"Instrument Serif", serif' }}
         >
-          Selected{' '}
+          Project{' '}
           <em className="text-white/60" style={{ fontStyle: 'italic' }}>
             Work
           </em>
