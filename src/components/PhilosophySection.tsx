@@ -11,6 +11,8 @@ const videos = [
   { id: 'EKISAz0src8', title: 'Beedio Call' },
   { id: 'FwjC223xx4s', title: 'Apne Haathon Se Mujhe Dedo Zeher' },
   { id: 'y4RKDcT5TRw', title: 'Boxing Fight Sequence' },
+  { id: '9tyYW4kURa4', title: 'Amarnath ki Katha' },
+  { id: 'Kr2tWA4C1uM', title: 'Muralidhar ki Murali' },
 ]
 
 export default function PhilosophySection() {
