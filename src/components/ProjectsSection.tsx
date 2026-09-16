@@ -1,5 +1,3 @@
-import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
 
 const projects = [
@@ -38,73 +36,23 @@ const projects = [
 ]
 
 export default function ProjectsSection() {
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-100px' })
-
   return (
-    <section id="projects" className="bg-transparent py-28 md:py-40 px-6 overflow-hidden">
-      <div className="max-w-6xl mx-auto" ref={ref}>
-        {/* Heading */}
-        <motion.h2
-          initial={{ opacity: 0, y: 40 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="text-5xl md:text-7xl lg:text-8xl text-white tracking-tight mb-16"
-          style={{ fontFamily: '"Instrument Serif", serif' }}
-        >
-          Project{' '}
-          <em className="text-white/60" style={{ fontStyle: 'italic' }}>
-            Work
-          </em>
-        </motion.h2>
-
-        {/* Project cards */}
-        <div className="flex flex-col gap-6">
-          {projects.map((project, i) => (
-            <motion.div
-              key={project.number}
-              initial={{ opacity: 0, y: 40 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.12 * i, ease: [0.16, 1, 0.3, 1] }}
-              className="liquid-glass rounded-3xl p-6 md:p-8 group"
-            >
-              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-4 mb-3">
-                    <span
-                      className="text-white/20 text-4xl md:text-5xl font-light tabular-nums"
-                      style={{ fontFamily: '"Instrument Serif", serif' }}
-                    >
-                      {project.number}
-                    </span>
-                    <span className="text-white/40 text-xs tracking-widest uppercase">
-                      {project.category}
-                    </span>
-                  </div>
-                  <h3 className="text-white text-xl md:text-2xl tracking-tight mb-3">
-                    {project.title}
-                  </h3>
-                  <p className="text-white/50 text-sm leading-relaxed max-w-2xl">
-                    {project.description}
-                  </p>
-                </div>
-
-                {/* CTA */}
-                <div className="flex items-center gap-2 mt-4 md:mt-0 flex-shrink-0">
-                  <motion.a
-                    href={project.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    whileHover={{ scale: 1.04 }}
-                    whileTap={{ scale: 0.96 }}
-                    className="liquid-glass rounded-full px-6 py-2 text-white/70 text-sm font-medium flex items-center gap-2 hover:text-white transition-colors"
-                  >
-                    View project
-                    <ArrowUpRight size={14} />
-                  </motion.a>
-                </div>
+    <section id="projects" className="section projects-section">
+      <div className="page-width">
+        <div className="section-heading"><h2>Project <span>Work</span></h2><span className="heading-rule" aria-hidden="true" /></div>
+        <div className="project-list">
+          {projects.map((project) => (
+            <article className="project-row" key={project.number}>
+              <span className="project-number" aria-hidden="true">{project.number}</span>
+              <div>
+                <p className="eyebrow">{project.category}</p>
+                <h3>{project.title}</h3>
+                <p className="body-copy">{project.description}</p>
               </div>
-            </motion.div>
+              <a className="project-link" href={project.url} target="_blank" rel="noreferrer">
+                View project <ArrowUpRight size={20} aria-hidden="true" />
+              </a>
+            </article>
           ))}
         </div>
       </div>

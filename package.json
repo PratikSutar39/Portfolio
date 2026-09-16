@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:content": "node scripts/verify-content.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^8.18.0",

@@ -1,60 +1,45 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { motion, AnimatePresence } from 'framer-motion'
-import { X } from 'lucide-react'
+import { ArrowUpRight, X } from 'lucide-react'
 
-interface Props {
-  id: string | null
-  onClose: () => void
-}
+interface Props { id: string | null; title: string; onClose: () => void }
 
-export default function VideoLightbox({ id, onClose }: Props) {
+export default function VideoLightbox({ id, title, onClose }: Props) {
+  const dialogRef = useRef<HTMLDialogElement>(null)
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
   useEffect(() => {
     if (!id) return
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
-    window.addEventListener('keydown', handler)
-    return () => window.removeEventListener('keydown', handler)
-  }, [id, onClose])
+    const previousFocus = document.activeElement as HTMLElement | null
+    const previousOverflow = document.body.style.overflow
+    const dialog = dialogRef.current
+    dialog?.showModal()
+    closeButtonRef.current?.focus()
+    document.body.style.overflow = 'hidden'
+    return () => {
+      dialog?.close()
+      document.body.style.overflow = previousOverflow
+      previousFocus?.focus({ preventScroll: true })
+    }
+  }, [id])
 
+  if (!id) return null
   return createPortal(
-    <AnimatePresence>
-      {id && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.25 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-sm px-4"
-          onClick={onClose}
-        >
-          {/* Close button */}
-          <button
-            onClick={onClose}
-            className="absolute top-5 right-5 liquid-glass rounded-full p-2 text-white/70 hover:text-white transition-colors"
-            aria-label="Close"
-          >
-            <X size={20} />
-          </button>
-
-          {/* iframe container */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.25 }}
-            className="w-full max-w-4xl aspect-video rounded-2xl overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <iframe
-              src={`https://www.youtube.com/embed/${id}?autoplay=1&rel=0`}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="w-full h-full"
-            />
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>,
-    document.body
+    <dialog ref={dialogRef} className="video-dialog" aria-labelledby="film-title" onCancel={(event) => { event.preventDefault(); onClose() }} onClick={(event) => { if (event.target === event.currentTarget) onClose() }}>
+      <div className="video-dialog-content">
+        <div className="video-dialog-header">
+          <h2 id="film-title">{title}</h2>
+          <div className="video-dialog-actions">
+            <a className="icon-button" href={`https://www.youtube.com/watch?v=${id}`} target="_blank" rel="noreferrer" aria-label="Open film on YouTube" title="Open film on YouTube"><ArrowUpRight size={20} /></a>
+            <button ref={closeButtonRef} type="button" className="icon-button" onClick={onClose} aria-label="Close film" title="Close film"><X size={22} /></button>
+          </div>
+        </div>
+        <div className="video-frame">
+          <iframe src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`} title={title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />
+        </div>
+      </div>
+    </dialog>,
+    document.body,
   )
 }
