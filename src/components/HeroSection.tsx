@@ -1,121 +1,73 @@
-import { Globe, ArrowRight, Linkedin, Instagram, Mail, Github } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { Aperture, ArrowRight, Download, Focus, Github, Instagram, Linkedin, Mail, Menu, X } from 'lucide-react'
 
 export default function HeroSection() {
+  const [menuOpen, setMenuOpen] = useState(false)
+  const menuButton = useRef<HTMLButtonElement>(null)
+  const reticle = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!menuOpen) return
+    const close = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setMenuOpen(false)
+        menuButton.current?.focus()
+      }
+    }
+    document.addEventListener('keydown', close)
+    return () => document.removeEventListener('keydown', close)
+  }, [menuOpen])
+
   return (
-    <section id="hero" className="min-h-screen bg-transparent overflow-hidden relative flex flex-col">
-      {/* Bottom gradient for headline legibility over the plasma */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50 z-[2] pointer-events-none" />
-
-      {/* Navbar */}
-      <nav className="relative z-20 px-6 py-6 mt-2">
-        <div className="liquid-glass rounded-full max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
-          {/* Left — logo */}
-          <div className="flex items-center gap-3">
-            <Globe size={24} className="text-white" />
-            <span className="text-white font-semibold text-lg tracking-tight">Pratik Sutar</span>
-          </div>
-
-          {/* Nav links — hidden on mobile */}
-          <div className="hidden md:flex items-center gap-8 ml-8">
-            {['Work', 'Systems', 'About', 'Contact'].map((link) => (
-              <a
-                key={link}
-                href={`#${link.toLowerCase()}`}
-                className="text-white/80 hover:text-white text-sm font-medium transition-colors"
-              >
-                {link}
-              </a>
-            ))}
-          </div>
-
-          {/* Right — actions */}
-          <div className="flex items-center gap-3">
-            <button className="text-white/70 hover:text-white text-sm font-medium transition-colors hidden sm:block">
-              Portfolio
-            </button>
-            <a
-              href="#contact"
-              className="liquid-glass rounded-full px-6 py-2 text-white text-sm font-medium hover:bg-white/5 transition-colors"
-            >
-              Connect
-            </a>
-          </div>
-        </div>
-      </nav>
-
-      {/* Hero content */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 py-12 text-center -translate-y-[10%]">
-        <h1
-          className="text-6xl md:text-8xl lg:text-9xl text-white tracking-tight leading-none"
-          style={{ fontFamily: '"Instrument Serif", serif' }}
-        >
-          Building AI systems
-          <br />
-          <em className="text-white/60 not-italic" style={{ fontStyle: 'italic' }}>
-            for stories.
-          </em>
-        </h1>
-
-        <p className="max-w-2xl text-white/70 text-sm md:text-base leading-relaxed px-4 mt-6">
-          Gen AI Engineer building production-ready AI systems — RAG pipelines,
-          autonomous agents, and full-stack LLM products, with generative character work in
-          ComfyUI — turning models into tools people can actually use.
-        </p>
-
-        {/* CTA row */}
-        <div className="flex flex-col sm:flex-row items-center gap-4 mt-10">
-          <a
-            href="#work"
-            className="liquid-glass rounded-full px-8 py-3 text-white text-sm font-medium hover:bg-white/5 transition-colors"
-          >
-            View My Work
-          </a>
-          <a
-            href="/resume.pdf"
-            className="flex items-center gap-2 bg-white text-black rounded-full px-8 py-3 text-sm font-medium hover:bg-white/90 transition-colors"
-          >
-            Download Resume
-            <ArrowRight size={16} />
-          </a>
-        </div>
+    <section id="hero" className="hero">
+      <div className="hero-photograph">
+        <img src="/images/pratik-aurora.jpg" alt="Pratik Sutar beneath the northern lights" width="1440" height="1440" />
       </div>
-
-      {/* Social icons */}
-      <div className="relative z-10 flex justify-center gap-4 pb-12">
-        <a
-          href="https://www.linkedin.com/in/pratiksutar39"
-          target="_blank"
-          rel="noreferrer"
-          className="liquid-glass rounded-full p-4 text-white/80 hover:text-white hover:bg-white/5 transition-all"
-          aria-label="LinkedIn"
-        >
-          <Linkedin size={20} />
-        </a>
-        <a
-          href="https://www.instagram.com/pratiksutar.39"
-          target="_blank"
-          rel="noreferrer"
-          className="liquid-glass rounded-full p-4 text-white/80 hover:text-white hover:bg-white/5 transition-all"
-          aria-label="Instagram"
-        >
-          <Instagram size={20} />
-        </a>
-        <a
-          href="https://github.com/PratikSutar39"
-          target="_blank"
-          rel="noreferrer"
-          className="liquid-glass rounded-full p-4 text-white/80 hover:text-white hover:bg-white/5 transition-all"
-          aria-label="GitHub"
-        >
-          <Github size={20} />
-        </a>
-        <a
-          href="mailto:sutarpratik39@gmail.com"
-          className="liquid-glass rounded-full p-4 text-white/80 hover:text-white hover:bg-white/5 transition-all"
-          aria-label="Email"
-        >
-          <Mail size={20} />
-        </a>
+      <header className="site-header">
+        <nav className="site-nav page-width" aria-label="Main navigation">
+          <a className="wordmark" href="#hero"><Aperture size={29} strokeWidth={1.5} aria-hidden="true" /><span>Pratik Sutar</span></a>
+          <div id="navigation-links" className={`nav-links ${menuOpen ? 'is-open' : ''}`}>
+            {['Work', 'Systems', 'About', 'Contact'].map((link) => (
+              <a key={link} href={`#${link.toLowerCase()}`} onClick={() => setMenuOpen(false)}>{link}</a>
+            ))}
+            <a href="#hero" onClick={() => setMenuOpen(false)}>Portfolio</a>
+          </div>
+          <a className="button button-small nav-connect" href="#contact" onClick={() => setMenuOpen(false)}>Connect <ArrowRight size={15} aria-hidden="true" /></a>
+          <button ref={menuButton} type="button" className="icon-button menu-toggle" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} aria-expanded={menuOpen} aria-controls="navigation-links" onClick={() => setMenuOpen(!menuOpen)}>
+            {menuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </nav>
+      </header>
+      <div className="hero-stage"
+        onPointerMove={(event) => {
+          if (event.pointerType !== 'mouse' || !reticle.current) return
+          const bounds = event.currentTarget.getBoundingClientRect()
+          reticle.current.style.transform = `translate3d(${event.clientX - bounds.left}px, ${event.clientY - bounds.top}px, 0)`
+        }}
+      >
+        <div className="viewfinder-corners" aria-hidden="true"><i /><i /><i /><i /></div>
+        <div className="hero-reticle" ref={reticle} aria-hidden="true"><Focus size={34} strokeWidth={1} /></div>
+        <div className="hero-inner page-width">
+          <div className="hero-copy">
+            <p className="eyebrow hero-name">Pratik Sutar</p>
+            <h1>Building AI systems<br /><span>for stories.</span></h1>
+            <p className="hero-description">
+              Gen AI Engineer building production-ready AI systems — RAG pipelines,
+              autonomous agents, and full-stack LLM products, with generative character work in
+              ComfyUI — turning models into tools people can actually use.
+            </p>
+            <div className="button-row">
+              <a className="button button-primary" href="#work">View My Work <ArrowRight size={18} aria-hidden="true" /></a>
+              <a className="button" href="/resume.pdf">Download Resume <Download size={17} aria-hidden="true" /></a>
+            </div>
+            <div className="social-links">
+              <a href="https://www.linkedin.com/in/pratiksutar39" target="_blank" rel="noreferrer" aria-label="LinkedIn" title="LinkedIn"><Linkedin size={20} /></a>
+              <a href="https://www.instagram.com/pratiksutar.39" target="_blank" rel="noreferrer" aria-label="Instagram" title="Instagram"><Instagram size={20} /></a>
+              <a href="https://github.com/PratikSutar39" target="_blank" rel="noreferrer" aria-label="GitHub" title="GitHub"><Github size={20} /></a>
+              <a href="mailto:sutarpratik39@gmail.com" aria-label="Email" title="Email"><Mail size={20} /></a>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   )
