@@ -1,43 +1,26 @@
+import { useState } from 'react'
+import { ArrowUpRight, Play } from 'lucide-react'
+
 interface Props {
   videoId: string
-  className?: string
+  title: string
+  localPoster?: boolean
   onPlay: (id: string) => void
 }
 
-export default function YouTubeTile({ videoId, className = '', onPlay }: Props) {
+export default function YouTubeTile({ videoId, title, localPoster = false, onPlay }: Props) {
+  const [failed, setFailed] = useState(false)
   return (
-    <div
-      className={`relative w-full h-full cursor-pointer group/tile ${className}`}
-      onClick={() => onPlay(videoId)}
-      role="button"
-      aria-label="Play video"
-    >
-      <img
-        src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
-        onError={(e) => {
-          const img = e.currentTarget
-          if (!img.src.includes('hqdefault')) {
-            img.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
-          }
-        }}
-        alt="Video thumbnail"
-        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 group/tile-hover:scale-105"
-      />
-
-      {/* Play button */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center transition-all duration-200 group-hover/tile:scale-110 group-hover/tile:bg-white/30">
-          {/* Triangle */}
-          <div
-            className="w-0 h-0 ml-1"
-            style={{
-              borderTop: '9px solid transparent',
-              borderBottom: '9px solid transparent',
-              borderLeft: '16px solid rgba(255,255,255,0.9)',
-            }}
-          />
-        </div>
-      </div>
-    </div>
+    <button type="button" className="film-poster" onClick={() => onPlay(videoId)} aria-label={`Play ${title}`}>
+      {!failed && <img
+        src={localPoster ? `/films/${videoId}.jpg` : `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
+        onError={() => setFailed(true)}
+        alt="" width="1280" height="720" loading="lazy" decoding="async"
+      />}
+      <span className="poster-shade" aria-hidden="true" />
+      <span className="poster-corners" aria-hidden="true"><i /><i /><i /><i /></span>
+      <span className="play-icon" aria-hidden="true"><Play size={16} fill="currentColor" strokeWidth={1} /></span>
+      <ArrowUpRight className="poster-arrow" size={21} aria-hidden="true" />
+    </button>
   )
 }

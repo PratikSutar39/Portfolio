@@ -1,63 +1,19 @@
-import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { Aperture } from 'lucide-react'
 
 export default function AboutSection() {
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-100px' })
-
   return (
-    <section
-      id="about"
-      className="bg-transparent pt-32 md:pt-44 pb-10 md:pb-14 px-6 overflow-hidden"
-      style={{
-        background:
-          'radial-gradient(ellipse at top, rgba(255,255,255,0.03) 0%, transparent 70%)',
-      }}
-    >
-      <div className="max-w-6xl mx-auto" ref={ref}>
-        {/* Label */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-white/40 text-sm tracking-widest uppercase mb-8"
-        >
-          About Me
-        </motion.p>
-
-        {/* Heading */}
-        <motion.h2
-          initial={{ opacity: 0, y: 40 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.1 }}
-          className="text-4xl md:text-6xl lg:text-7xl text-white leading-[1.1] tracking-tight"
-          style={{ fontFamily: '"Instrument Serif", serif' }}
-        >
-          I design AI workflows
-          <br />
-          <em className="text-white/60" style={{ fontStyle: 'italic' }}>
-            where creativity
-          </em>
-          <br />
-          for music, video, and production teams
-          <br />
-          <em className="text-white/60" style={{ fontStyle: 'italic' }}>
-            meets automation.
-          </em>
-        </motion.h2>
-
-        {/* Paragraph */}
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.25 }}
-          className="max-w-3xl mt-8 text-white/60 text-base md:text-lg leading-relaxed"
-        >
-          My work centers on generative media — character and image pipelines built in ComfyUI
-          with FLUX and LoRA, along with video and image generation using tools like Higgsfield,
-          Kling, and Google Veo. My focus is production-readiness: systems that consider
-          scalability, cost, and real deployment — not just impressive demos.
-        </motion.p>
+    <section id="about" className="section about-section">
+      <div className="page-width">
+        <div className="section-heading"><p className="eyebrow">About Me</p><Aperture size={22} strokeWidth={1} aria-hidden="true" /></div>
+        <div className="about-layout">
+          <h2>I design AI workflows <span>where creativity</span> for music, video, and production teams <span>meets automation.</span></h2>
+          <p className="body-copy">
+            My work centers on generative media — character and image pipelines built in ComfyUI
+            with FLUX and LoRA, along with video and image generation using tools like Higgsfield,
+            Kling, and Google Veo. My focus is production-readiness: systems that consider
+            scalability, cost, and real deployment — not just impressive demos.
+          </p>
+        </div>
       </div>
     </section>
   )

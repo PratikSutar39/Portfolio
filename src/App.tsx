@@ -1,4 +1,3 @@
-import GlobalShaderBackground from './components/GlobalShaderBackground'
 import HeroSection from './components/HeroSection'
 import AboutSection from './components/AboutSection'
 import FeaturedVideoSection from './components/FeaturedVideoSection'
@@ -12,15 +11,12 @@ import ContactSection from './components/ContactSection'
 
 export default function App() {
   return (
-    <div className="relative bg-[#06010a] min-h-screen">
-      {/* Fixed plasma shader — runs behind every section,
-          morphs as you scroll through the palette */}
-      <GlobalShaderBackground />
-
-      <main className="relative z-10">
-        <HeroSection />
-        <AboutSection />
+    <>
+      <a className="skip-link" href="#content">Skip to content</a>
+      <HeroSection />
+      <main id="content">
         <FeaturedVideoSection />
+        <AboutSection />
         <PhilosophySection />
         <ProjectsSection />
         <ExperienceSection />
@@ -29,6 +25,6 @@ export default function App() {
         <EducationSection />
         <ContactSection />
       </main>
-    </div>
+    </>
   )
 }

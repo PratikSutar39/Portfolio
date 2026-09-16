@@ -1,82 +1,24 @@
-import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
-import { Mail, ArrowRight, Globe } from 'lucide-react'
+import { Aperture, Mail, ArrowRight, ArrowUp, Globe } from 'lucide-react'
 
 export default function ContactSection() {
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-100px' })
-
   return (
-    <section
-      id="contact"
-      className="bg-transparent py-32 px-6 text-center relative overflow-hidden"
-      style={{
-        background:
-          'radial-gradient(ellipse at center, rgba(255,255,255,0.04) 0%, transparent 65%)',
-      }}
-    >
-      <div className="max-w-6xl mx-auto" ref={ref}>
-        {/* Heading */}
-        <motion.h2
-          initial={{ opacity: 0, y: 40 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.9 }}
-          className="text-5xl md:text-7xl lg:text-8xl text-white tracking-tight"
-          style={{ fontFamily: '"Instrument Serif", serif' }}
-        >
-          Let's build
-          <br />
-          <em className="text-white/60" style={{ fontStyle: 'italic' }}>
-            smarter creative systems.
-          </em>
-        </motion.h2>
-
-        {/* Subheading */}
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.15 }}
-          className="max-w-xl mx-auto mt-6 text-white/60 text-base leading-relaxed"
-        >
+    <section id="contact" className="section contact-section">
+      <div className="page-width">
+        <Aperture className="contact-aperture" size={44} strokeWidth={1} aria-hidden="true" />
+        <h2>Let's build<br /><span>smarter creative systems.</span></h2>
+        <p className="body-copy">
           For collaborations, AI workflow ideas, creative automation systems, portfolio reviews,
           or production technology experiments, reach out and let's connect.
-        </motion.p>
-
-        {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.3 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8"
-        >
-          <motion.a
-            href="mailto:sutarpratik39@gmail.com"
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            className="liquid-glass rounded-full px-8 py-4 text-white text-sm font-medium inline-flex items-center gap-3 hover:bg-white/5 transition-colors"
-          >
-            <Mail size={18} />
-            Contact Me
-            <ArrowRight size={16} />
-          </motion.a>
-          <motion.a
-            href="https://pratik-sutar.vercel.app/"
-            target="_blank"
-            rel="noreferrer"
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            className="liquid-glass rounded-full px-8 py-4 text-white/80 text-sm font-medium inline-flex items-center gap-3 hover:text-white hover:bg-white/5 transition-colors"
-          >
-            <Globe size={18} />
-            Read the Blog
-          </motion.a>
-        </motion.div>
-
-        {/* Footer */}
-        <div className="border-t border-white/10 mt-24 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-white/40 text-sm">
+        </p>
+        <div className="button-row">
+          <a href="mailto:sutarpratik39@gmail.com" className="button button-primary"><Mail size={18} aria-hidden="true" />Contact Me<ArrowRight size={17} aria-hidden="true" /></a>
+          <a href="https://pratik-sutar.vercel.app/" target="_blank" rel="noreferrer" className="button"><Globe size={18} aria-hidden="true" />Read the Blog</a>
+        </div>
+        <footer className="site-footer">
           <span>© 2026 Pratik Sutar · Pune, India</span>
           <span>Gen AI Engineer · T-Series · Creative Technology</span>
-        </div>
+          <a className="icon-button" href="#hero" aria-label="Back to top" title="Back to top"><ArrowUp size={18} /></a>
+        </footer>
       </div>
     </section>
   )
